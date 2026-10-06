@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-labelledby="title desc">
+  <title id="title">SQLConduit</title>
+  <desc id="desc">Database cylinder connected to a middleware layer</desc>
+  <rect width="160" height="160" rx="32" fill="#0f172a"/>
+  <g fill="none" stroke="#fbbf24" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <ellipse cx="80" cy="45" rx="42" ry="17"/>
+    <path d="M38 45v52c0 9 19 17 42 17s42-8 42-17V45M38 71c0 9 19 17 42 17s42-8 42-17"/>
+    <path d="M56 133h48"/>
+  </g>
+</svg>
