@@ -241,3 +241,9 @@ auto body = sqlconduit::exporters::toPrometheusText(
 ```
 
 `toPrometheusText` 只生成 Prometheus exposition text，HTTP `/metrics` 端点由应用提供。指纹 label 有 1000 个强制上限，上例进一步限制为 100，避免时序基数失控。`Logger` 只调整 SQLConduit 自身 stderr 日志的最低级别；业务观测建议用 `setObserver()` 接入自己的链路。
+
+## 直接返回结果与运行时诊断
+
+1.2 起 query(sql, Params) 返回 QueryResult；`query<T>`/`queryOne<T>`/`queryScalar<T>`/`queryColumn<T>` 返回类型化结果。先检查 ok()，再读取 rows/items/value；不要把错误当作空列表。命名方法使用拥有值的 NamedParams；Builder/Statement 可直接执行并保留构建错误。见[完整示例与重载清单](/api/query-results)。
+
+1.1 起 capabilities(name)、diagnostics()、setExecutionPhaseObserver() 提供不主动连库的快照与阶段事件，见[运行时诊断](/api/diagnostics)。

@@ -4,7 +4,7 @@
 
 ## 版本与能力声明
 
-- 1.0.0 是稳定发布基线；本站还会记录 `dev` 中已实现的 Unreleased 能力。
+- 1.2.0 是当前稳定发布基线；本站的 API 和语义说明与该版本对齐。
 - API 存在、路径为 native、以及在某个数据库/平台组合上通过实库验证，是三件不同的事。
 - 发布行为以使用的 tag 对应 CHANGELOG 为准；不要用 `dev` 文档替稳定包做能力承诺。
 
@@ -19,7 +19,7 @@
 
 - 始终先检查 `result.status`，再查看 `result.mode`。`CompatibilityFallback` 是受支持的有界 worker 路径，不是失败。
 - PostgreSQL 普通 query/execute 覆盖最完整；MySQL prepared、事务、游标、批量、多结果和生成键等会回退。
-- Oracle/ODBC native async 属于当前 Unreleased 开发线，且 ODBC 是运行时能力探测；FreeTDS 通常走 fallback。
+- Oracle/ODBC native async 自 1.0.1 起可用，且 ODBC 是运行时能力探测；FreeTDS 通常走 fallback。
 - 容量规划同时监控 `active`、`queueDepth`、`rejected`、`fallbackOperations` 和池的 `asyncWaiting`。
 
 ## 写入、重试与故障转移
@@ -40,9 +40,18 @@
 
 - query cache 按拓扑在成功写后失效，不理解表依赖；不要将不可安全复用的查询结果缓存。
 - 结果转换拦截器必须正确标记 `transformed`，避免用户特定数据进入共享缓存。
-- SQL Builder 只覆盖可验证 CRUD；JOIN、upsert、分页、锁、表达式和存储过程由应用写方言 SQL。
+- SQL Builder 只覆盖可验证 CRUD；JOIN、upsert、锁、表达式和存储过程由应用写方言 SQL。
 - SQL 分类/指纹是审计和观测启发式，不能替代数据库权限。
 
 ## 上线验证
 
 在目标操作系统、客户端 SDK 和数据库版本上，至少验证连接耗尽、查询超时、取消后连接复用、断网/重连、重复 reload、游标遗弃、大值/多字节字符、批量中途失败和优雅关闭。
+
+## 1.2 部署边界
+
+- 取消是协作式请求，不是回滚证明；提前停止的在途写入可能 outcomeUnknown。
+- offset 分页必须唯一排序；可选 COUNT 和数据默认不是同一快照。
+- v1.2.0 自动发布门禁已通过，包括 MySQL/PostgreSQL/SQL Server 实库路径；Oracle/OCI 明确未复验，仍需独立验收实际 SDK 和服务器组合。
+- native 能力快照是历史观测，不是连通性探测或单条 SQL 的执行保证。
+
+[查询控制](/api/query-results) · [分页](/api/pagination) · [诊断](/api/diagnostics)。

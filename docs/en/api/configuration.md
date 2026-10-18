@@ -135,3 +135,7 @@ auto st = client.init(cfg); // still performs full semantic validation
 ```
 
 The `bool` reports parsing success and `error` carries the diagnostic. Parsing does not replace `Client::init`, which validates semantics and constructs the runtime.
+
+## Configuration tooling and heartbeat (1.1–1.2)
+
+Use sqlconduitctl validate/explain/doctor for offline checks and explicit connection probes; 1.2 adds init templates and reload --dry-run. A preview never applies a topology; real reload replaces all candidate pools. heartbeat_interval_ms defaults to 5000; 0 disables periodic heartbeat since 1.2. See [tools and diagnostics](./diagnostics) and [starters/reload preview](./query-results).

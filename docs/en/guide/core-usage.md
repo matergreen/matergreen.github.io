@@ -54,3 +54,11 @@ Context target overrides the method source. Async submission copies the current 
 `reload(path, grace)` fully builds and validates a replacement before atomic publication. Old resolved handles can finish during grace. Never reload from a callback on that Client.
 
 Use `allPoolStats`, `slowSqlStats`, `recentSlowSql`, and `asyncStats` as diagnostic snapshots. Correlate waiting, timeouts, connection creation failures, native/fallback ratio, and slow histograms with server metrics.
+
+## New in 1.2
+
+- [Direct query results](/en/api/query-results): raw rows, entity/one/scalar/column helpers, named bindings, Builder execution, strict errors and per-call timeout/cancellation.
+- [Typed pagination](/en/api/pagination): page/size, hasNext, optional totals, async aggregation and Session consistency.
+- [Configuration tools and diagnostics](/en/api/diagnostics): validate/explain/doctor, runtime snapshots and optional OpenTelemetry (since 1.1).
+
+Examples target v1.2.0. Existing output-parameter and free mapping APIs remain supported.

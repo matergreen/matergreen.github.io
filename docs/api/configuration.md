@@ -252,3 +252,7 @@ auto st = client.init(cfg); // init 仍会做完整语义校验
 ```
 
 `ConfigLoader` 的 `bool` 只表示解析结果，错误原因在 `error` 中；不要因为手工解析过就跳过 `Client::init` 的验证与运行时构建。
+
+## 配置工具与心跳（1.1–1.2）
+
+sqlconduitctl validate/explain/doctor 提供离线检查与显式连接探测；1.2 新增 init 模板和 reload --dry-run。预览不应用拓扑，真实 reload 替换全部候选池。heartbeat_interval_ms 默认 5000，1.2 起 0 明确关闭周期心跳。见[配置工具与诊断](./diagnostics)、[模板与重载预览](./query-results)。

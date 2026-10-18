@@ -111,3 +111,9 @@ auto st = session.execute("UPDATE files SET payload=? WHERE id=?",
 ```
 
 `StreamSource` is a uniform input surface, but current drivers buffer before binding; it is not a constant-memory upload guarantee. Keep the source alive through the call.
+
+## 1.2 conveniences on the same connection
+
+Session supports synchronous raw/typed/named query, one/scalar/column, executeNamed, Builder/Statement inputs, withOptions and `queryPage<T>`/`queryPageNamed<T>`. They neither borrow a second connection nor start/commit a transaction; Session has no typed async methods. A dataSource option cannot reroute an existing Session.
+
+See [query examples](/en/api/query-results) and [Session pagination](/en/api/pagination). For count/data snapshot consistency choose an explicit transaction isolation level.

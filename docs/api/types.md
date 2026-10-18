@@ -139,3 +139,18 @@ if (!st.ok()) {
 | `async::OpResult` | 仅状态 |
 
 它们都包含 `status` 和 `ExecutionMode`。
+
+## 1.2 新增返回类型
+
+| 类型 | 成功数据 | 空值/错误边界 |
+| --- | --- | --- |
+| common::QueryResult | rows | 用 ok() 区分失败与空结果 |
+| common::ExecuteResult | affected | 检查 status，不能只检查行数 |
+| `EntityResult<T>` | items | 失败不返回部分映射列表 |
+| `EntityOne<T>` | optional value | 无记录为空，多于一条失败 |
+| `ScalarResult<T>` | value、hasRow、isNull | 无记录不同于 SQL NULL；必须单列 |
+| `PageResult<T>` | items、page、pageSize、hasNext、可选 total | 不隐式 COUNT；任何子查询/映射失败都使数据无效 |
+
+Client 异步结果保留 Native/CompatibilityFallback；同步结果的 mode 不用于声明异步能力。便捷结果均有 ok()；itemsOrThrow/rowsOrThrow/valueOrThrow 是显式异常风格，不是默认值替代。
+
+Status.outcomeUnknown 表示单次控制提前停止已经开始的写入；false 不是所有驱动/提交失败均可重试的证明。见[完整语义](./query-results)。

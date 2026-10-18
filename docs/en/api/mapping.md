@@ -55,7 +55,7 @@ if (page.status.ok()) consume(page.items);
 
 Each `fetchAs` call returns an independent page. Use Cursor state and driver semantics to determine completion.
 
-Existing data converts through `mapping::fromRows`, `mapping::fromRow`, and `keysAs`. For async work, await/get the Client future, check status, then map `result.rows`; 1.0 has no separate async mapping facade.
+Existing data still converts through `mapping::fromRows`, `mapping::fromRow`, and `keysAs`. Since 1.2, prefer `client.queryAsync<User>`() and related completion-based helpers without an extra waiting thread. See [direct results](./query-results).
 
 ## Generate parameters and writes
 
@@ -75,3 +75,14 @@ auto batchWrite = sqlconduit::insertBatchAs(client, "users", users);
 Generated SQL uses mapped identifiers and `?` values only; it does not infer relationships or business expressions. `updateAs` requires at least one primary key and one writable non-key field. Generated-key support varies by driver and dialect; use explicit `RETURNING`/`OUTPUT` SQL when exact control matters.
 
 Built-in converters cover scalar numbers, bool, string, Blob, Timestamp, enums, `std::optional<T>`, Decimal, Date, Time, Uuid, Json, Array, Composite, and PostgreSQL geometry values. Custom types can specialize `mapping::ValueConverter<T>` and should return explicit conversion errors.
+
+## One-line entity registration since 1.2
+
+```cpp
+struct Account { std::int64_t id = 0; std::string name; };
+SQLCONDUIT_ENTITY(Account, "accounts", id, name)
+// After initializing Client:
+// auto accounts = client.query<Account>("SELECT id, name FROM accounts");
+```
+
+Place the macro once at global namespace scope. It supports 1–32 public members with matching column names and strict missing-column checks. Do not also specialize RowMapper for Account. Use SQLCONDUIT_MAP with TABLE/NAMED_FIELD/FLAGGED_FIELD or explicit Mapping for aliases, generated fields or custom policies. [All variants and typed Builder](./query-results).

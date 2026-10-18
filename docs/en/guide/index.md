@@ -38,3 +38,11 @@ Building a component does not register it in a `Client`. Call the matching `addD
 3. [Batches, cursors, and large values](/en/guide/data-processing)
 4. [Async execution semantics](/en/guide/async)
 5. [Browse the API by class](/en/api/)
+
+## New in 1.2
+
+- [Direct query results](/en/api/query-results): raw rows, entity/one/scalar/column helpers, named bindings, Builder execution, strict errors and per-call timeout/cancellation.
+- [Typed pagination](/en/api/pagination): page/size, hasNext, optional totals, async aggregation and Session consistency.
+- [Configuration tools and diagnostics](/en/api/diagnostics): validate/explain/doctor, runtime snapshots and optional OpenTelemetry (since 1.1).
+
+Examples target v1.2.0. Existing output-parameter and free mapping APIs remain supported.

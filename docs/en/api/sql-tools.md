@@ -20,7 +20,7 @@ if (built.ok()) client.query(built.statement.sql, built.statement.params, rows);
 
 Use `Builder::insert/update/deleteFrom`, `value(s)`, and conditions `eq/ne/lt/le/gt/ge/like/in/notIn/between/isNull/isNotNull/all/any/not_`. Values always stay in Params and identifiers are quoted for the dialect. UPDATE/DELETE without WHERE fail unless `.allowAllRows()` is explicit.
 
-The builder intentionally covers verifiable portable CRUD only. Write parameterized SQL for joins, expressions, upsert, pagination, locking, generated-key clauses, and routine dialects.
+The builder intentionally covers verifiable portable CRUD only. Write parameterized SQL for joins, expressions, upsert, locking, generated-key clauses, and routine dialects.
 
 ## SQL analysis
 
@@ -70,3 +70,7 @@ auto st = sqlconduit::runScriptsInDir(client, "migrations", options, &files);
 ```
 
 Files are path-sorted. The splitter understands quotes, comments, and common BEGIN/END blocks but is not a complete vendor parser. SQLConduit does not provide migration version tables or distributed migration locking.
+
+## Member-pointer Builder and pagination since 1.2
+
+After SQLCONDUIT_ENTITY registration, `select<T>`/`insert<T>`/`update<T>`/`deleteFrom<T>` use mapped member pointers for conditions, projections, sorting and bound assignments. Conditional methods do not bypass the full-table write guard. build() returns the existing BuildResult and can be passed directly to Client/Session queries or execute. buildPage() generates an ordered SELECT plan plus a structural COUNT. [Complete typed Builder examples](./query-results#member-pointer-builder-and-one-line-entities) · [Pagination and dialect rules](./pagination).

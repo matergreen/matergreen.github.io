@@ -1,10 +1,10 @@
 # Features and semantic boundaries
 
-This page follows the current implementation and separates API existence, live validation, and vendor-native execution. 1.0.0 is stable; the development branch also contains next-patch Oracle/ODBC native async and topology hardening.
+This page is aligned with the 1.2.0 implementation and separates API existence, live validation, and vendor-native execution. Oracle/ODBC native async and async-topology hardening are included in 1.0.1.
 
 ## Data access
 
-Parameterized query/execute, multiple results and routines, transactions/savepoints, atomic batches, cursors/row callbacks, generated keys, prepared cache/handles, strict header-only mapping, and portable CRUD Builder are implemented. Vendor routine and key syntax remains explicit. Builder intentionally excludes joins, expressions, upsert, pagination, locking, and arbitrary dialect translation.
+Parameterized query/execute, multiple results and routines, transactions/savepoints, atomic batches, cursors/row callbacks, generated keys, prepared cache/handles, strict header-only mapping, and portable CRUD Builder are implemented. Vendor routine and key syntax remains explicit. Builder intentionally excludes joins, expressions, upsert, locking, and arbitrary dialect translation.
 
 MySQL, PostgreSQL, Oracle OCI, and ODBC are separate components. The Value model includes decimal/date/time/UUID/JSON/blob, intervals, arrays/composites, and typed Oracle collections/objects. Unsupported vendor combinations fail explicitly. StreamSource is currently buffered before binding.
 
@@ -31,3 +31,9 @@ SQL audit, global/fingerprint rate limits, custom limiters, route/before/after/c
 ## Not claimed
 
 SQLConduit is not a proxy, ORM, migration framework, or leader-election system. It does not translate arbitrary SQL or inject SQL Server OUTPUT. The public API currently has no cancel Handle, coroutine wrapper, or custom executor. StreamSource is not yet incremental server streaming. Live validation breadth varies by driver/platform; run integration tests in the deployment environment.
+
+## 1.1–1.2 usability additions
+
+Direct raw/entity/one/scalar/column results, strict one-line mapping, member-pointer CRUD, named values, Builder execution and completion-based typed async reduce application decoding code. Offset pagination provides hasNext by probing one extra row and opt-in COUNT, not keyset paging or automatic snapshot consistency. Per-call controls cover queue/pool/retry/execution budgets with explicit ambiguous-write semantics.
+
+CLI validation/explanation/probes, starters/reload previews, runtime diagnostics/capability snapshots and optional OpenTelemetry are implemented. Oracle/OCI was not revalidated for 1.2.0; capability existence is not live qualification. See [API overview](/en/api/).

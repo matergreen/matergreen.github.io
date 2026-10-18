@@ -18,7 +18,7 @@
 | 大结果集 | `queryEach` / `openCursor` | 逐行或分批消费 |
 | 批量写入 | `executeBatch` | 无外层事务时保证原子回滚 |
 | 后台执行 | `Client::*Async` | 返回 `std::future`，结果包含执行模式 |
-| 结构体映射 | `mapping.h` 自由函数 | 必须显式传 `Client&` 或 `Session&` |
+| 结构体映射 | `query<T>` / `queryOne<T>`；保留 mapping 自由函数 | 直接读取 items/value，注册一次映射 |
 | 动态拓扑 | `add/removeDataSource`、`add/removeGroup` | 删除会检查引用和 grace period |
 | 运行时观测 | pool/slow SQL/observer/async stats | 数据均按 Client 隔离 |
 
@@ -58,4 +58,12 @@ int main() {
 再次调用 `init()` 会返回 `AlreadyInitialized`，配置更新用 `reload()`。不要从当前 Client 的 observer、interceptor、逐行或事务回调内部销毁、移动、reload 或 shutdown 同一个 Client；应在回调返回后安排生命周期变更。
 :::
 
-公共签名以仓库的 [`include/sqlconduit`](https://github.com/matergreen/dbmw/tree/dev/include/sqlconduit) 为准。1.x 对文档化应用 API、配置 Schema、错误码数值和稳定指标保持源码兼容。
+公共签名以仓库的 [`include/sqlconduit`](https://github.com/matergreen/SQLConduit/tree/v1.2.0/include/sqlconduit) 为准。1.x 对文档化应用 API、配置 Schema、错误码数值和稳定指标保持源码兼容。
+
+## 1.2 新版入口
+
+- [直接返回查询结果](/api/query-results)：实体/单条/标量/单列、命名参数、Builder 执行、严格错误与单次超时/取消。
+- [类型化分页](/api/pagination)：页码/大小、hasNext、可选总数、异步汇合与 Session 一致性。
+- [配置工具与诊断](/api/diagnostics)：validate/explain/doctor、运行时快照、可选 OpenTelemetry（1.1 起）。
+
+示例以 v1.2.0 为准；旧输出参数和 mapping 自由函数继续支持。

@@ -1,6 +1,6 @@
 # 功能与语义边界
 
-本页按当前代码实现说明能力，不把“存在 API”“已经过实库验证”“所有厂商路径都 native”混为一谈。稳定发布版本为 1.0.0；开发分支还包含面向下一补丁版本的 Oracle/ODBC native async 和异步拓扑加固。
+本页与 1.2.0 代码实现对齐，不把“存在 API”“已经过实库验证”“所有厂商路径都 native”混为一谈。Oracle/ODBC native async 和异步拓扑加固已纳入 1.0.1。
 
 ## 数据访问
 
@@ -80,7 +80,13 @@ SQLConduit 不提供 leader election、租约或 fencing。配置多个写主库
 - 不自动翻译任意 SQL 方言，也不自动注入 SQL Server OUTPUT；
 - 暂无公共取消 Handle、协程包装或自定义 executor；
 - StreamSource 暂非真正增量上传；
-- SQL Builder 暂不覆盖 JOIN、表达式、upsert、分页和锁；
+- SQL Builder 不覆盖 JOIN、表达式、upsert 和锁；1.2 的分页由 buildPage/queryPage 提供；
 - 驱动/平台组合的实库验证范围不同，发布前应在目标环境跑集成测试。
 
 具体使用见 [API 参考](/api/) 和 [配置参考](/api/configuration)。
+
+## 1.1–1.2 易用性能力
+
+直接返回原始/实体/单条/标量/单列、严格一行映射、成员指针 CRUD、命名参数、Builder 直接执行和完成式异步映射，减少调用方拆解数据的代码。offset 分页通过多取一行计算 hasNext，并可选 COUNT；不提供 keyset 或隐式快照一致性。单次控制覆盖队列、借连接、重试与执行预算，写入结果不确定时明确告知。
+
+配置校验/解释/探测、初始化模板/重载预览、运行时诊断/能力快照和可选 OpenTelemetry 均已实现。Oracle/OCI 本次未复验，存在能力不等于本次已通过实库验收。见 [API 总览](/api/)。

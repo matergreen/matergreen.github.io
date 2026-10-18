@@ -38,3 +38,11 @@ SQLConduit 是嵌入 C++17 应用进程的数据库访问中间件。它不是�
 3. [批量、游标和大字段](/guide/data-processing)
 4. [异步执行语义](/guide/async)
 5. [按类查阅 API](/api/)
+
+## 1.2 新版入口
+
+- [直接返回查询结果](/api/query-results)：实体/单条/标量/单列、命名参数、Builder 执行、严格错误与单次超时/取消。
+- [类型化分页](/api/pagination)：页码/大小、hasNext、可选总数、异步汇合与 Session 一致性。
+- [配置工具与诊断](/api/diagnostics)：validate/explain/doctor、运行时快照、可选 OpenTelemetry（1.1 起）。
+
+示例以 v1.2.0 为准；旧输出参数和 mapping 自由函数继续支持。

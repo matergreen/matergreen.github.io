@@ -84,3 +84,11 @@ auto async = client.asyncStats();
 这些快照用于诊断而不是控制流。观察 `waiting/asyncWaiting`、borrow timeout、连接创建失败、native/fallback 比例和慢 SQL histogram，结合数据库端指标判断瓶颈。
 
 下一步：[批量、流式与游标](./data-processing) · [完整 Client API](/api/sync)
+
+## 1.2 新版入口
+
+- [直接返回查询结果](/api/query-results)：实体/单条/标量/单列、命名参数、Builder 执行、严格错误与单次超时/取消。
+- [类型化分页](/api/pagination)：页码/大小、hasNext、可选总数、异步汇合与 Session 一致性。
+- [配置工具与诊断](/api/diagnostics)：validate/explain/doctor、运行时快照、可选 OpenTelemetry（1.1 起）。
+
+示例以 v1.2.0 为准；旧输出参数和 mapping 自由函数继续支持。

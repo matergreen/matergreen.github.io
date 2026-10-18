@@ -3,7 +3,7 @@
 ## 获取源码
 
 ```bash
-git clone https://github.com/matergreen/dbmw.git SQLConduit
+git clone --branch v1.2.0 --depth 1 https://github.com/matergreen/SQLConduit.git
 cd SQLConduit
 ```
 
@@ -101,3 +101,18 @@ CMake 启用/链接驱动组件解决“代码是否存在”；`client.addDrive
 - 运行安装后 consumer smoke test，而不只运行仓库内测试。
 
 更完整字段见[配置参考](/api/configuration)。
+
+## 生成与检查配置
+
+```sh
+sqlconduitctl init postgres > new-datasource.yaml
+# 安全设置 SQLCONDUIT_DB_PASSWORD，并修改生成的地址、用户与 TLS 设置。
+sqlconduitctl validate new-datasource.yaml
+sqlconduitctl explain new-datasource.yaml
+sqlconduitctl doctor new-datasource.yaml --connect
+sqlconduitctl reload current.yaml candidate.yaml --dry-run
+```
+
+init 向标准输出写模板，重定向可能覆盖文件。dry-run 离线预览，不修改运行中的应用；实际 Client.reload 会重建全部候选池。见[配置便捷工具](/api/query-results)。
+
+独立可选 OpenTelemetry 源码组件与仅打包 Core 的 Conan 配方，见[诊断](/api/diagnostics)及 [v1.2.0 包管理说明](https://github.com/matergreen/SQLConduit/blob/v1.2.0/docs/package_managers.md)。

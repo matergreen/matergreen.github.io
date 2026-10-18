@@ -1,6 +1,6 @@
 import { defineConfig } from 'vitepress'
 
-const repository = 'https://github.com/matergreen/dbmw'
+const repository = 'https://github.com/matergreen/SQLConduit'
 const base = process.env.DOCS_BASE || '/'
 
 const zhNav = [
@@ -8,7 +8,7 @@ const zhNav = [
   { text: '功能', link: '/features/' },
   { text: 'API', link: '/api/' },
   { text: '参与贡献', link: '/contributing/' },
-  { text: 'v1.0.0', items: [{ text: 'GitHub Releases', link: `${repository}/releases` }] },
+  { text: 'v1.2.0', items: [{ text: 'GitHub Releases', link: `${repository}/releases` }] },
 ]
 
 const enNav = [
@@ -16,7 +16,7 @@ const enNav = [
   { text: 'Features', link: '/en/features/' },
   { text: 'API', link: '/en/api/' },
   { text: 'Contribute', link: '/en/contributing/' },
-  { text: 'v1.0.0', items: [{ text: 'GitHub Releases', link: `${repository}/releases` }] },
+  { text: 'v1.2.0', items: [{ text: 'GitHub Releases', link: `${repository}/releases` }] },
 ]
 
 const zhSidebar = [
@@ -42,7 +42,10 @@ const zhSidebar = [
     text: 'API 参考',
     items: [
       { text: 'API 总览', link: '/api/' },
+      { text: '查询结果、命名参数与单次控制', link: '/api/query-results' },
+      { text: '类型化分页', link: '/api/pagination' },
       { text: 'Client 与运行时观测', link: '/api/sync' },
+      { text: '配置工具与诊断', link: '/api/diagnostics' },
       { text: 'Session 与游标', link: '/api/session' },
       { text: 'Future 异步 API', link: '/api/async' },
       { text: '实体映射', link: '/api/mapping' },
@@ -80,7 +83,10 @@ const enSidebar = [
     text: 'API reference',
     items: [
       { text: 'API overview', link: '/en/api/' },
+      { text: 'Query results, bindings and controls', link: '/en/api/query-results' },
+      { text: 'Typed pagination', link: '/en/api/pagination' },
       { text: 'Client and telemetry', link: '/en/api/sync' },
+      { text: 'Configuration tools and diagnostics', link: '/en/api/diagnostics' },
       { text: 'Session and cursor', link: '/en/api/session' },
       { text: 'Future async API', link: '/en/api/async' },
       { text: 'Entity mapping', link: '/en/api/mapping' },

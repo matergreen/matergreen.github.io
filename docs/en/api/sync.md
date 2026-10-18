@@ -162,3 +162,9 @@ auto body = sqlconduit::exporters::toPrometheusText(
 ```
 
 `toPrometheusText` returns exposition text; your application owns the HTTP `/metrics` endpoint. Fingerprint labels have an absolute 1,000-series cap, and the example tightens it to 100. `Logger` only controls the minimum level of SQLConduit's stderr logger; use `setObserver()` to connect operation telemetry to your own tracing stack.
+
+## Value-returning queries and diagnostics
+
+Since 1.2, query(sql, Params) returns QueryResult; `query<T>`/`queryOne<T>`/`queryScalar<T>`/`queryColumn<T>` return typed results. Always check ok() before consuming rows/items/value. Named methods use owned NamedParams; Builder/Statement inputs retain build errors. See [examples and all overload families](/en/api/query-results).
+
+Since 1.1, capabilities(name), diagnostics() and setExecutionPhaseObserver() provide non-probing snapshots and execution milestones. See [diagnostics](/en/api/diagnostics).

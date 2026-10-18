@@ -1,7 +1,7 @@
 # Download, build, and configure
 
 ```bash
-git clone https://github.com/matergreen/dbmw.git SQLConduit
+git clone --branch v1.2.0 --depth 1 https://github.com/matergreen/SQLConduit.git
 cd SQLConduit
 cmake -S . -B build \
   -DCMAKE_BUILD_TYPE=Release \
@@ -64,3 +64,18 @@ client.shutdown();
 Building/linking a component controls whether code exists; `addDriver()` controls whether this Client can use it. A missing component yields DriverDisabled, while missing registration yields UnknownDriver.
 
 Before production, validate secrets/TLS, per-leaf pool sizing, timeout and cancellation on the real vendor driver, actual async mode, rendered-SQL disclosure, and an installed-package consumer build. See the [configuration reference](/en/api/configuration).
+
+## Generate and inspect configuration
+
+```sh
+sqlconduitctl init postgres > new-datasource.yaml
+# Set SQLCONDUIT_DB_PASSWORD securely and adjust the generated endpoint/TLS settings.
+sqlconduitctl validate new-datasource.yaml
+sqlconduitctl explain new-datasource.yaml
+sqlconduitctl doctor new-datasource.yaml --connect
+sqlconduitctl reload current.yaml candidate.yaml --dry-run
+```
+
+init writes a template to stdout; redirection may overwrite a file. Dry-run is offline and does not apply changes to an application; actual Client.reload rebuilds all candidate pools. [Details](/en/api/query-results#configuration-starter-and-safe-preview).
+
+For the separate optional OpenTelemetry source-build component and Core-only Conan recipe, see [diagnostics](/en/api/diagnostics) and the [v1.2.0 package guide](https://github.com/matergreen/SQLConduit/blob/v1.2.0/docs/package_managers.md).

@@ -40,7 +40,7 @@ auto remove = sqlconduit::Builder::deleteFrom("sessions")
 
 条件还有 `ne/lt/le/gt/ge/like/in/notIn/between/isNull/isNotNull/all/any/not_`。值始终进入 Params，标识符按方言引用。没有 WHERE 的 UPDATE/DELETE 默认拒绝，确实需要全表操作时显式 `.allowAllRows()`。
 
-Builder 有意只覆盖可验证的可移植 CRUD，不猜测 JOIN、表达式、upsert、分页、锁、生成键和存储过程方言；这些场景直接写参数化 SQL。
+Builder 有意只覆盖可验证的可移植 CRUD，不猜测 JOIN、表达式、upsert、锁、生成键和存储过程方言；这些场景直接写参数化 SQL。
 
 ## SQL 分析
 
@@ -136,3 +136,7 @@ auto st = sqlconduit::runScriptsInDir(client, "migrations", options, &files);
 ```
 
 文件按路径排序。splitter 识别引号、注释和常见 BEGIN/END 块，但不是完整厂商 parser；复杂 delimiter、动态 SQL 或特殊过程体应由应用预处理或直接作为单条显式 SQL 执行。脚本工具不提供 migration version table 或分布式锁。
+
+## 1.2 成员指针 Builder 与分页
+
+SQLCONDUIT_ENTITY 注册后，`select<T>`/`insert<T>`/`update<T>`/`deleteFrom<T>` 使用映射成员指针表达条件、投影、排序与绑定赋值；条件式方法不会绕过全表写入保护。build() 返回现有 BuildResult，可直接交给 Client/Session 查询或 execute；buildPage() 生成排序 SELECT 计划与结构化 COUNT。见[类型化 Builder 完整示例](./query-results)及[分页与方言边界](./pagination)。

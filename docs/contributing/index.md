@@ -1,6 +1,6 @@
 # 反馈与 Pull Request
 
-主要渠道：[GitHub Issues](https://github.com/matergreen/dbmw/issues) 和 [Pull Requests](https://github.com/matergreen/dbmw/pulls)。Gitee 仓库是国内镜像。
+主要渠道：[GitHub Issues](https://github.com/matergreen/SQLConduit/issues) 和 [Pull Requests](https://github.com/matergreen/SQLConduit/pulls)。Gitee 仓库是国内镜像。
 
 ## 提交问题
 
@@ -13,7 +13,7 @@
 ```bash
 git clone https://github.com/YOUR_NAME/dbmw.git SQLConduit
 cd SQLConduit
-git remote add upstream https://github.com/matergreen/dbmw.git
+git remote add upstream https://github.com/matergreen/SQLConduit.git
 
 cmake -S . -B build -DSQLCONDUIT_BUILD_TESTS=ON
 cmake --build build -j

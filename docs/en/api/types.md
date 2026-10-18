@@ -87,3 +87,18 @@ Only code `Ok` makes `Status::ok()` true. `Buffered` means accepted into a volat
 Retry only when `retryable` is true; writes additionally require idempotency. `connectionBroken` means the connection cannot safely return to the pool.
 
 Async result types are QueryResult, MultiQueryResult, ExecResult, ExecKeysResult, EachResult, BatchResult, and OpResult. All contain `status` and `ExecutionMode`; their payloads are rows/sets, affected count, keys, row count, or batch result as appropriate.
+
+## Result contracts added in 1.2
+
+| Type | Success data | Important empty/error rule |
+| --- | --- | --- |
+| common::QueryResult | rows | ok() distinguishes failure from no rows |
+| common::ExecuteResult | affected | Inspect status, not just affected |
+| `EntityResult<T>` | items | Error clears partial mappings |
+| `EntityOne<T>` | optional value | Zero rows is empty; more than one fails |
+| `ScalarResult<T>` | value, hasRow, isNull | No row differs from SQL NULL; exactly one column |
+| `PageResult<T>` | items, page, pageSize, hasNext, optional total | No implicit COUNT; any subquery/mapping failure invalidates data |
+
+Client async results preserve Native/CompatibilityFallback. Do not use a synchronous result mode as an async capability claim. All convenience results expose ok(); itemsOrThrow/rowsOrThrow/valueOrThrow are explicit exception-style accessors, not default substitution.
+
+Status.outcomeUnknown marks early per-call stop of an already-started write; false is not a universal proof that a driver/commit failure is safe to replay. [Detailed semantics](./query-results).

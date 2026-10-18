@@ -2,8 +2,8 @@
 
 Async operations are `Client` members returning standard `std::future`. There is no global async facade, callback Handle, custom-executor injection, or coroutine Task.
 
-::: warning Version boundary
-This page tracks the current `dev` implementation. Oracle/ODBC native async and async group-routing state machines belong to the unreleased 1.0.1 development line. The same Future API exists in 1.0.0, but more of those paths report `CompatibilityFallback`. Use the CHANGELOG attached to the exact tag as the release authority.
+::: info Version boundary
+This page is aligned with 1.2.0. Oracle/ODBC native async and async group-routing state machines are available starting in 1.0.1. The same Future API exists in 1.0.0, but more of those paths report `CompatibilityFallback`. Use the CHANGELOG attached to the exact tag as the release authority.
 :::
 
 ## Configuration
@@ -91,3 +91,11 @@ Query/execute groups, cache, retry, replica fallback, fenced primary failover, a
 - Retry backoff appears in `delayedPending`; shutdown resumes delayed continuations so futures resolve with structured closed/overloaded status rather than `broken_promise`.
 
 Destroying an unconsumed future is valid; the Client still owns the operation. Do not shut down a Client from one of its own row, transaction, observer, or interceptor callbacks.
+
+## 1.2 typed completion and per-call controls
+
+Client `queryAsync<T>`, `queryOneAsync<T>`, `queryScalarAsync<T>`, `queryColumnAsync<T>`, their Named variants and `queryPageAsync<T>` map at completion without a waiting thread. Actual mode still reflects driver eligibility; typed APIs do not make parameterized MySQL native.
+
+withOptions can complete a stopped operation before physical cleanup, including compatibility fallback. This is distinct from configured driver timeout/late classification described above. Read status.outcomeUnknown for an already-started write; cancellation does not prove rollback or authorize replay. Future readiness does not imply an idle pool.
+
+[Budget/cancellation examples](/en/api/query-results#per-call-deadlines-and-cancellation) · [Async pagination](/en/api/pagination).

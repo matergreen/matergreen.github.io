@@ -2,8 +2,8 @@
 
 异步入口是 `Client` 成员函数，返回标准 `std::future`。没有全局异步门面、callback `Handle`、自定义执行器注入或协程 `Task`。
 
-::: warning 版本边界
-本页按当前 `dev` 代码记录。Oracle/ODBC native async 与组路由异步状态机属于 `Unreleased` 的 1.0.1 开发线；1.0.0 的同一 Future API 仍可用，但这些路径会更多报告 `CompatibilityFallback`。以具体 tag 的 CHANGELOG 为准。
+::: info 版本边界
+本页与 1.2.0 对齐。Oracle/ODBC native async 与组路由异步状态机自 1.0.1 起可用；1.0.0 的同一 Future API 仍可用，但这些路径会更多报告 `CompatibilityFallback`。以具体 tag 的 CHANGELOG 为准。
 :::
 
 ## 配置
@@ -119,3 +119,11 @@ native 读使用主动 deadline：future 只完成一次并返回 `QueryTimeout`
 ## 关闭与 future 生命周期
 
 销毁一个尚未 `get()` 的 future 是合法的，操作仍由 Client 管理。调用 `shutdown(grace)` 后不再接受新任务，并排空已接受任务；不要在异步回调（行回调/事务函数/observer/interceptor）内部 shutdown 同一个 Client。
+
+## 1.2：完成式映射与单次控制
+
+Client 的 `queryAsync<T>`、`queryOneAsync<T>`、`queryScalarAsync<T>`、`queryColumnAsync<T>`、对应 Named 方法与 `queryPageAsync<T>` 在完成时映射，不增加等待线程。实际 mode 仍按驱动能力报告；类型化 API 不会让带参 MySQL 自动变成 native。
+
+withOptions 可以在物理清理完成前返回停止结果，包括兼容回退路径；这与上文配置驱动超时后的 late classification 不同。已经开始的写入需检查 status.outcomeUnknown；取消不证明回滚，不代表可以重放。future 就绪不代表连接池空闲。
+
+[预算与取消示例](/api/query-results) · [异步分页](/api/pagination)。

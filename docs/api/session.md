@@ -170,3 +170,9 @@ auto st = session.execute(
 ```
 
 当前 `StreamSource` 是统一输入接口，但驱动会先缓冲再绑定，不承诺常量内存上传。输入流在调用完成前必须保持有效。
+
+## 1.2：复用当前连接的便捷方法
+
+Session 支持同步原始/类型化/命名查询、单条/标量/单列、executeNamed、Builder/Statement、withOptions 及 `queryPage<T>`/`queryPageNamed<T>`。它们不另借连接，不暗中开始或提交事务；Session 没有类型化异步方法，dataSource 选项也不能切换已固定的连接。
+
+见[查询示例](/api/query-results)和 [Session 分页](/api/pagination)。需要 COUNT/数据快照一致时，使用显式事务并选择合适的隔离级别。

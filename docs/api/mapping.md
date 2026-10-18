@@ -95,7 +95,7 @@ st = sqlconduit::mapping::fromRow(row, user);
 auto keys = sqlconduit::keysAs<User>(generatedKeys);
 ```
 
-异步映射采用同样方式：先 `client.queryAsync(...).get()`，检查 status，再对 `result.rows` 调用 `fromRows`。1.0 公共 API 不提供独立异步 mapping facade。
+原始结果仍可在 get() 后手动 fromRows；1.2 更推荐 `client.queryAsync<User>`() 等完成式映射，不增加等待线程。见[直接返回结果](./query-results)。
 
 ## 参数与 SQL 生成
 
@@ -133,3 +133,14 @@ auto batchWrite = sqlconduit::insertBatchAs(client, "users", users);
 ## 支持的成员类型
 
 标量 bool、整数、浮点、string、Blob、Timestamp、枚举、`std::optional<T>`，以及 Decimal、Date、Time、Uuid、Json、Array、Composite 和 PostgreSQL geometry 类型都有转换器。自定义类型可特化 `mapping::ValueConverter<T>`，并应返回明确转换错误而不是截断数据。
+
+## 1.2 一行注册实体
+
+```cpp
+struct Account { std::int64_t id = 0; std::string name; };
+SQLCONDUIT_ENTITY(Account, "accounts", id, name)
+// 初始化 Client 后：
+// auto accounts = client.query<Account>("SELECT id, name FROM accounts");
+```
+
+宏在全局命名空间注册一次，支持 1–32 个同名列公共成员，缺列严格报错。不要再为 Account 特化 RowMapper。别名、自增字段和自定义策略可使用带 TABLE/NAMED_FIELD/FLAGGED_FIELD 的 SQLCONDUIT_MAP 或显式 Mapping。见[完整注册方式与成员指针 Builder](./query-results)。

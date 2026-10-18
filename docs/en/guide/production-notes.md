@@ -4,7 +4,7 @@ These are runtime boundaries that can be hidden by a simple “API available” 
 
 ## Version and capability claims
 
-- 1.0.0 is the stable release baseline; this site also tracks implemented Unreleased work on `dev`.
+- 1.2.0 is the current stable release baseline; the API and semantic guidance on this site is aligned with it.
 - API availability, native execution, and live validation on a particular database/platform combination are separate claims.
 - Treat the CHANGELOG for the exact tag as authoritative; do not use `dev` documentation as a promise for an older package.
 
@@ -19,7 +19,7 @@ These are runtime boundaries that can be hidden by a simple “API available” 
 
 - Check `result.status` before `result.mode`. `CompatibilityFallback` is a supported bounded-worker path, not a failure.
 - PostgreSQL ordinary query/execute has the broadest native path. MySQL prepared operations, transactions, cursors, batches, multi-result calls, and generated keys fall back.
-- Oracle/ODBC native async is current Unreleased work and ODBC is runtime capability-gated; FreeTDS normally falls back.
+- Oracle/ODBC native async is available starting in 1.0.1 and ODBC is runtime capability-gated; FreeTDS normally falls back.
 - Capacity planning should track `active`, `queueDepth`, `rejected`, `fallbackOperations`, and pool `asyncWaiting` together.
 
 ## Writes, retries, and failover
@@ -40,9 +40,18 @@ These are runtime boundaries that can be hidden by a simple “API available” 
 
 - Query-cache invalidation is topology-wide after successful writes, not table-dependency analysis. Cache only safely reusable results.
 - Result-transforming interceptors must mark `transformed` to keep user-specific output out of shared cache entries.
-- SQL Builder covers verifiable CRUD only. Joins, upsert, pagination, locking, expressions, and routines remain application dialect SQL.
+- SQL Builder covers verifiable CRUD only. Joins, upsert, locking, expressions, and routines remain application dialect SQL.
 - SQL classification and fingerprints are observability/audit heuristics, not an authorization boundary.
 
 ## Release validation
 
 On the target OS, client SDK, and server version, test pool exhaustion, deadlines, post-cancel reuse, network recovery, repeated reload, abandoned cursors, large/multibyte values, mid-batch failures, and graceful shutdown.
+
+## 1.2 deployment boundaries
+
+- Cancellation is cooperative, not rollback; early stopped writes can have outcomeUnknown.
+- Offset pagination requires unique ordering; optional COUNT and page data do not share a snapshot by default.
+- All automated release gates passed for v1.2.0, including live MySQL/PostgreSQL/SQL Server paths; Oracle/OCI was explicitly not revalidated. Validate Oracle and actual SDK combinations separately.
+- Native capability snapshots are cached evidence, not connectivity tests or per-statement guarantees.
+
+[Query controls](/en/api/query-results) · [Pagination](/en/api/pagination) · [Diagnostics](/en/api/diagnostics).

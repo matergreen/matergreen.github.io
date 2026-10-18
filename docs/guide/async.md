@@ -1,6 +1,6 @@
 # 异步执行指南
 
-SQLConduit 1.0 使用 `Client` 成员 Future API。最常见的用法：
+SQLConduit 1.2 使用 `Client` 成员 Future API。最常见的用法：
 
 ```cpp
 auto pending = client.queryAsync(
@@ -51,3 +51,7 @@ native 读在 deadline 触发时先完成 future，并取消/隔离底层连接�
 - 把 statement timeout 当数据库端强杀保证：取消能力由厂商驱动决定。
 
 完整方法与驱动矩阵见 [Future 异步 API](/api/async)。
+
+## 1.2 单次预算
+
+上文描述的配置超时不等于完整取消契约：withOptions 的预算覆盖排队、借连接、重试和执行，兼容任务也可能在物理清理前先返回停止结果。请阅读[单次取消与写入歧义](/api/query-results)，类型化异步映射和分页沿用这套完成路径。

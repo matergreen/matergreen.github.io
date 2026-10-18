@@ -17,13 +17,15 @@ hero:
       link: /en/api/
     - theme: alt
       text: GitHub
-      link: https://github.com/matergreen/dbmw
+      link: https://github.com/matergreen/SQLConduit
 
 features:
   - title: Instance-owned Client
     details: Every Client owns its drivers, topology, cache, interceptors, telemetry, and async executor. There is no implicit global client.
   - title: Four driver families
     details: Enable MySQL, PostgreSQL, Oracle OCI, and ODBC as components while keeping one ? placeholder and native-binding model.
+  - title: Typed queries and pages
+    details: Query entities, single values, columns, or pages directly. One-line mappings, member-pointer conditions, and named bindings reduce decoding code.
   - title: Complete data access
     details: Queries, multiple result sets, routines, transactions, savepoints, batches, cursors, row callbacks, generated keys, and prepared handles.
   - title: Real, observable async
@@ -39,7 +41,7 @@ features:
 <HomeExtras lang="en" />
 
 ::: info Documentation version
-The public API follows the stable 1.0 contract, while this site also tracks implemented Unreleased work on `dev`. Development-only behavior is marked on the relevant page; deployment decisions should follow the CHANGELOG for the exact tag in use.
+This site is aligned with SQLConduit 1.2.0. The public API follows the stable 1.x contract; deployment decisions should still follow the CHANGELOG for the exact tag in use.
 :::
 
 ## Minimal example
@@ -63,3 +65,9 @@ client.shutdown();
 ```
 
 Continue with [download, build, and configuration](/en/guide/getting-started), or open the [API reference](/en/api/).
+
+## Less application code in 1.2
+
+[Query directly into entities](/en/api/query-results), build conditions with mapped member pointers, and [return typed pages](/en/api/pagination) without manually decoding ResultSet.
+
+Oracle/OCI was not revalidated for this release; previous manual evidence does not certify the new APIs.

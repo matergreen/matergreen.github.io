@@ -18,7 +18,7 @@ Examples include `sqlconduit/sqlconduit.h`, use `?` placeholders, and register d
 | Large result | `queryEach` / `openCursor` | Row-wise or paged consumption |
 | Batch write | `executeBatch` | Atomic rollback when no outer transaction exists |
 | Background work | `Client::*Async` | Returns `std::future` with execution mode |
-| Entity mapping | free functions in `mapping.h` | Pass `Client&` or `Session&` explicitly |
+| Entity mapping | `query<T>` / `queryOne<T>`; free helpers retained | Read items/value after registering a mapping once |
 | Dynamic topology | add/remove datasource/group | Reference checks plus grace period |
 | Runtime telemetry | pool/slow SQL/observer/async stats | Isolated per Client |
 
@@ -58,4 +58,12 @@ int main() {
 A second `init()` returns `AlreadyInitialized`; use `reload()` for configuration replacement. Do not destroy, move, reload, or shut down a Client from one of that same Client's observer, interceptor, row, or transaction callbacks. Schedule lifecycle work after the callback returns.
 :::
 
-The authoritative signatures live under [`include/sqlconduit`](https://github.com/matergreen/dbmw/tree/dev/include/sqlconduit). Documented application APIs, configuration Schema, error values, and stable metrics remain source-compatible across 1.x.
+The authoritative signatures live under [`include/sqlconduit`](https://github.com/matergreen/SQLConduit/tree/v1.2.0/include/sqlconduit). Documented application APIs, configuration Schema, error values, and stable metrics remain source-compatible across 1.x.
+
+## New in 1.2
+
+- [Direct query results](/en/api/query-results): raw rows, entity/one/scalar/column helpers, named bindings, Builder execution, strict errors and per-call timeout/cancellation.
+- [Typed pagination](/en/api/pagination): page/size, hasNext, optional totals, async aggregation and Session consistency.
+- [Configuration tools and diagnostics](/en/api/diagnostics): validate/explain/doctor, runtime snapshots and optional OpenTelemetry (since 1.1).
+
+Examples target v1.2.0. Existing output-parameter and free mapping APIs remain supported.

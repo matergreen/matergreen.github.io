@@ -1,6 +1,6 @@
 # Async execution guide
 
-SQLConduit 1.0 uses Client future methods:
+SQLConduit 1.2 uses Client future methods:
 
 ```cpp
 auto pending = client.queryAsync(
@@ -20,3 +20,7 @@ For ordinary group query/execute, replica selection, retry, cache, primary fallb
 Avoid immediate `.get()` when concurrency is desired, nested async pool borrow inside a transaction callback, treating Native as success, destroying the Client before orderly shutdown, and assuming statement timeout guarantees server-side kill.
 
 See the complete [Future async API](/en/api/async).
+
+## Per-call budgets since 1.2
+
+The configured timeout behavior above is not the whole cancellation contract: withOptions provides a shared budget over queues, pool waits, retries and execution, and may return before physical cleanup even for compatibility work. [See cancellation and ambiguous-write rules](/en/api/query-results#per-call-deadlines-and-cancellation). Typed async mapping and pagination reuse these completion paths.
